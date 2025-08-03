@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Invigilator</title>
+  <!-- Modern Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #f3f4f6 0%, #e0e4ec 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      color: #111;
+      padding-bottom: 80px;
+    }
+
+    .top-bar {
+      width: 100%;
+      padding: 20px 16px 12px;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #222;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #ddd;
+      background-color: #fafafa;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      animation: fadeInDown 0.8s ease forwards;
+    }
+
+    .top-bar .menu-icon {
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+
+    #logs {
+      width: 100%;
+      max-width: 450px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    .log-entry {
+      background-color: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      transform: translateY(50px);
+      opacity: 0;
+      animation: slideIn 0.8s ease forwards;
+    }
+
+    .log-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    .log-content {
+      padding: 14px 16px;
+    }
+
+    .timestamp {
+      font-size: 0.95rem;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    .status {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #d32f2f;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      max-width: 450px;
+      background-color: #fff;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 12px 0;
+      box-shadow: 0 -2px 12px rgba(0,0,0,0.1);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .bottom-nav-icon {
+      font-size: 1.7rem;
+      color: #888;
+      cursor: pointer;
+      transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .bottom-nav-icon:hover {
+      color: #222;
+      transform: scale(1.1);
+    }
+
+    @keyframes slideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .top-bar {
+        font-size: 1.3rem;
+        padding: 16px 12px;
+      }
+
+      .bottom-nav {
+        padding: 10px 0;
+      }
+
+      .bottom-nav-icon {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    AI Invigilator
+    <div class="menu-icon">☰</div>
+  </div>
+
+  <div id="logs"></div>
+
+  <div class="bottom-nav">
+    <div class="bottom-nav-icon">🏠</div>
+    <div class="bottom-nav-icon">📷</div>
+    <div class="bottom-nav-icon">⚙️</div>
+  </div>
+
+  <script>
+    const apiUrl = 'https://api.sheetbest.com/sheets/4245ee99-cd97-4783-9c20-278a4ed883d7'; // replace with your actual Sheet.best URL
+
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        const logsContainer = document.getElementById('logs');
+        data.reverse().forEach((log, index) => {
+          const entry = document.createElement('div');
+          entry.className = 'log-entry';
+          entry.style.animationDelay = `${index * 0.2}s`;
+
+          entry.innerHTML = `
+            <img class="log-image" src="${log.image_url}" alt="Screenshot">
+            <div class="log-content">
+              <div class="timestamp">${log.timestamp}</div>
+              <div class="status">${log.status}</div>
+            </div>
+          `;
+
+          logsContainer.appendChild(entry);
+        });
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  </script>
+</body>
+</html>
